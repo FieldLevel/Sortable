@@ -171,10 +171,26 @@
 							}
 
 							if (el === win) {
-								win.scrollTo(win.pageXOffset + scrollOffsetX, win.pageYOffset + scrollOffsetY);
+								var scrollX = win.pageXOffset + scrollOffsetX;
+								var scrollY = win.pageYOffset + scrollOffsetY;
+								var limitX = Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth) - win.innerWidth;
+								var limitY = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight) - win.innerHeight;
+
+								// prevent window from scrolling past it's scroll limits for iOS Safari
+								if (scrollX < 0 || scrollX > limitX) { scrollX = win.pageXOffset; }
+								if (scrollY < 0 || scrollY > limitY) { scrollY = win.pageYOffset; }
+								win.scrollTo(scrollX, scrollY);
 							} else {
-								el.scrollTop += scrollOffsetY;
-								el.scrollLeft += scrollOffsetX;
+								var scrollX = el.scrollLeft + scrollOffsetX;
+								var scrollY = el.scrollTop + scrollOffsetY;
+								var limitX = el.scrollWidth - el.offsetWidth;
+								var limitY = el.scrollHeight - el.offsetHeight;
+
+								// prevent element from scrolling past it's scroll limits for iOS Safari
+								if (scrollX < 0 || scrollX > limitX) { scrollX = el.scrollLeft; }
+								if (scrollY < 0 || scrollY > limitY) { scrollY = el.scrollTop; }
+								el.scrollLeft = scrollX;
+								el.scrollTop = scrollY;
 							}
 						}, 24);
 					}
