@@ -332,6 +332,11 @@
 			_on(el, 'dragenter', this);
 		}
 
+		// Need this for iOS 10 for some reason
+		document.ontouchmove = function(e) {
+			return true;
+		};
+
 		touchDragOverListeners.push(this._onDragOver);
 
 		// Restore sorting
